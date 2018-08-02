@@ -1,10 +1,15 @@
 'use strict';
 
+const path = require('path');
 const expect = require('chai').expect;
 const setupTest = require('ember-fastboot-addon-tests').setupTest;
 
 describe('index', function() {
-  setupTest('fastboot'/*, options */);
+  setupTest('fastboot', {
+    installPackages: {
+      'ember-body-class2': `file:${path.join(__dirname, '../')}`
+    }
+  });
 
   it('renders', async function() {
     const { jQuery: $, response } = await this.visit('/')
