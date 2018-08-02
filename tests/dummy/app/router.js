@@ -8,6 +8,7 @@ const Router = EmberRouter.extend({
 
 Router.map(function() {
   this.route('test');
+  this.route('binding-test');
 });
 
 export default Router;
