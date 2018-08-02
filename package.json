@@ -1,5 +1,5 @@
 {
-  "name": "ember-body-class",
+  "name": "ember-body-class2",
   "version": "1.0.1",
   "description": "Easily add CSS classes to the body, including route names and loading/error states.",
   "keywords": [
@@ -15,7 +15,8 @@
   "license": "MIT",
   "contributors": [
     "Chris Manson <chris@stonecircle.io> (https://stonecircle.io)",
-    "Add Jam (https://addjam.com/)"
+    "Add Jam (https://addjam.com/)",
+    "Nathan Hammond <github.com@nathanhammond.com>"
   ],
   "directories": {
     "doc": "doc",
@@ -23,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stonecircle/ember-body-class"
+    "url": "https://github.com/nathanhammond/ember-body-class"
   },
   "scripts": {
     "build": "ember build",
@@ -68,5 +69,5 @@
   "ember-addon": {
     "configPath": "tests/dummy/config"
   },
-  "homepage": "https://github.com/stonecircle/ember-body-class"
+  "homepage": "https://github.com/nathanhammond/ember-body-class"
 }

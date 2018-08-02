@@ -1,61 +1,42 @@
-[![npm version](https://badge.fury.io/js/ember-body-class.svg)](http://badge.fury.io/js/ember-body-class)
-[![Travis CI](https://travis-ci.org/AddJam/ember-body-class.svg)](https://travis-ci.org/AddJam/ember-body-class)
+[![npm version](https://badge.fury.io/js/ember-body-class2.svg)](http://badge.fury.io/js/ember-body-class2)
+[![Travis CI](https://travis-ci.org/nathanhammond/ember-body-class.svg)](https://travis-ci.org/nathanhammond/ember-body-class)
 
-# ember-body-class
+# ember-body-class2
 
 Easily add CSS classes on the `<body>`, including route names as well as loading and error states.
-`ember install ember-body-class`
+
+`npm install --save ember-body-class2`
+
+This is a fork of [ember-body-class](https://github.com/stonecircle/ember-body-class). Differences:
+- It removes API surface in favor of moving to a declarative pattern. This reduces the likelihood of class naming collisions.
+- It does not branch for FastBoot.
+- It also addresses bugs which have remained unadressed in the original.
 
 ## Usage
 
-### Route name classes
+### Custom Classes
+All routes have a `classNames` attribute of type `Array`. If you wanted to add a
+class `strawberry-jam` to your route, it would look like this:
 
-By default, all of your routes will include CSS class names. This works for the
-whole hierarchy, so if you have a route nested at `application/dashboard/stats`,
-then you'll end up with `application`, `dashboard`, `stats`, `application-dashboard` and `application-dashboard-stats` classes.
+```js
+import Route from '@ember/routing/route';
 
-To disable this, see _options_ below.
+export default Route.extend({
+  classNames: ['strawberry-jam']
+});
+```
 
-### Loading & Error classes
+### Loading & Error Classes
 
 Adding the `loading` and `error` classes requires you to include a mixin in your
 application route. Include it like this:
 
-```
-import Ember from 'ember';
+```js
+// app/routes/application.js
+import Route from '@ember/routing/route';
 import BodyClassMixin from 'ember-body-class/mixins/body-class';
 
-export default Ember.Route.extend(BodyClassMixin, { });
+export default Route.extend(BodyClassMixin, {
+  // Add any other customizations you may have here.
+});
 ```
-
-### Custom classes
-All routes have a `classNames` attribute of type Array. If you wanted to add a
-class `strawberry-jam` to your route, it would look like this:
-
-```
-export default Ember.Route.extend({
-  classNames: ["strawberry-jam"]
-})
-```
-
-## Options
-
-You can disable route name classes being added in your environment.js like this.
-
-```
-ENV['ember-body-class'] = {
-  includeRouteName: false
-}
-```
-
-## License
-
-The MIT License (MIT)
-
-Copyright (c) 2015
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
