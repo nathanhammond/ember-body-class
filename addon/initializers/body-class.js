@@ -1,76 +1,60 @@
+import Ember from 'ember';
 import Route from '@ember/routing/route';
-
 import { addClass, removeClass } from '../utils/body-class';
+import { getOwner } from '@ember/application';
+import { observer } from '@ember/object';
 
-export function initialize(instance) {
-  var config;
+const WeakMapReference = WeakMap || Ember.WeakMap;
+const addedClasses = new WeakMapReference();
 
-  if (instance.resolveRegistration) {
-    // Ember 2.1+
-    // http://emberjs.com/blog/2015/08/16/ember-2-1-beta-released.html#toc_registry-and-container-reform
-    config = instance.resolveRegistration('config:environment');
-  } else {
-    config = instance.container.lookupFactory('config:environment');
-  }
-
-  // Default to true when not set
-  let _includeRouteName = true;
-  if (config['ember-body-class'] && config['ember-body-class'].includeRouteName === false) {
-    _includeRouteName = false;
-  }
-
+export function initialize() {
   Route.reopen({
-    classNames: [],
-    bodyClasses: Object.freeze([]),
+    classNames: null,
 
-    _getRouteDepthClasses() {
-      let routeParts = this.get('routeName').split('.');
-      let routeDepthClasses = routeParts.slice(0);
-      let currentSelector = [];
+    _bodyClassAdd() {
+      const owner = getOwner(this);
+      const document = owner.lookup('service:-document');
+      const body = document.body;
 
-      routeParts.forEach((part)=> {
-        currentSelector.push(part);
+      const toAdd = this.get('classNames');
+      addedClasses.set(this, toAdd);
 
-        routeDepthClasses.push(currentSelector.join(`-`));
-      });
+      if (Array.isArray(toAdd)) {
+        toAdd.forEach(function(className) {
+          addClass(body, className);
+        });
+      }
+    },
 
-      return routeDepthClasses;
+    _bodyClassRemove() {
+      const owner = getOwner(this);
+      const document = owner.lookup('service:-document');
+      const body = document.body;
+
+      const toRemove = addedClasses.get(this);
+      addedClasses.delete(this);
+
+      if (Array.isArray(toRemove)) {
+        toRemove.forEach(function(className) {
+          removeClass(body, className);
+        });
+      }
     },
 
     activate() {
       this._super(...arguments);
-      const document = instance.lookup('service:-document');
-      const body = document.body;
-      ['bodyClasses', 'classNames'].forEach((classes) => {
-        this.get(classes).forEach(function(klass) {
-          addClass(body, klass);
-        });
-      });
-
-      if (_includeRouteName) {
-        this._getRouteDepthClasses().forEach((depthClass)=> {
-          addClass(body, depthClass);
-        });
-      }
+      this._bodyClassAdd();
     },
 
     deactivate() {
       this._super(...arguments);
-      const document = instance.lookup('service:-document');
-      const body = document.body;
+      this._bodyClassRemove();
+    },
 
-      ['bodyClasses', 'classNames'].forEach((classes) => {
-        this.get(classes).forEach(function(klass) {
-          removeClass(body, klass)
-        });
-      });
-
-      if (_includeRouteName) {
-        this._getRouteDepthClasses().forEach((depthClass)=> {
-          removeClass(body, depthClass)
-        });
-      }
-    }
+    _classNamesObserver: observer('classNames', function() {
+      this._bodyClassRemove();
+      this._bodyClassAdd();
+    })
   });
 }
 
