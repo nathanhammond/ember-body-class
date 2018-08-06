@@ -40,3 +40,34 @@ export default Route.extend(BodyClassMixin, {
   // Add any other customizations you may have here.
 });
 ```
+
+### Add Class Name to Each Route
+
+This is not recommended. The preference should be to attach a `classNames` property to each route that needs it. This is for two reasons:
+
+- Routes may have the same names, making it not a unique identifier.
+- If you relocate your route, the class name could change, resulting in unexpected CSS output changes.
+
+Selecting your own class name on a per-route basis sidesteps both of these concerns. However, since that is still possibly a need in applications, here is an example of how it could be done:
+
+```js
+// app/initializers/route-class-name.js
+import Route from '@ember/routing/route';
+import { computed } from '@ember/object';
+
+export function initialize() {
+    Route.reopen({
+        classNames: computed(function() {
+            const routeName = this.get('routeName');
+            if (routeName === 'application') {
+                return;
+            }
+            return [routeName.replace(/\./g, '-')];
+        })
+    });
+}
+
+export default {
+  initialize
+};
+```
