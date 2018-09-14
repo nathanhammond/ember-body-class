@@ -8,10 +8,11 @@ export default Mixin.create({
     loading(/* transition, route */) {
       const document = getOwner(this).lookup('service:-document');
       const body = document.body;
+      let router = this._router || this.router;
 
       addClass(body, 'loading');
 
-      this.router.on('didTransition', function() {
+      router.on('didTransition', function() {
         removeClass(body, 'loading');
       });
 
@@ -21,10 +22,11 @@ export default Mixin.create({
     error: function(/* error, transition */) {
       const document = getOwner(this).lookup('service:-document');
       const body = document.body;
+      let router = this._router || this.router;
 
       addClass(body, 'error');
 
-      this.router.on('didTransition', function() {
+      router.on('didTransition', function() {
         removeClass(body, 'error');
       });
 
