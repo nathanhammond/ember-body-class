@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Route from '@ember/routing/route';
-import { addClass, removeClass } from '../utils/body-class';
+import { getTarget, addClass, removeClass } from '../utils/body-class';
 import { getOwner } from '@ember/application';
 import { observer } from '@ember/object';
 
@@ -11,49 +11,47 @@ export function initialize() {
   Route.reopen({
     classNames: null,
 
-    _bodyClassAdd() {
+    _targetAddClass() {
       const owner = getOwner(this);
-      const document = owner.lookup('service:-document');
-      const body = document.body;
+      const target = getTarget(owner);
 
       const toAdd = this.get('classNames');
       addedClasses.set(this, toAdd);
 
       if (Array.isArray(toAdd)) {
         toAdd.forEach(function(className) {
-          addClass(body, className);
+          addClass(target, className);
         });
       }
     },
 
-    _bodyClassRemove() {
+    _targetRemoveClass() {
       const owner = getOwner(this);
-      const document = owner.lookup('service:-document');
-      const body = document.body;
+      const target = getTarget(owner);
 
       const toRemove = addedClasses.get(this);
       addedClasses.delete(this);
 
       if (Array.isArray(toRemove)) {
         toRemove.forEach(function(className) {
-          removeClass(body, className);
+          removeClass(target, className);
         });
       }
     },
 
     activate() {
       this._super(...arguments);
-      this._bodyClassAdd();
+      this._targetAddClass();
     },
 
     deactivate() {
       this._super(...arguments);
-      this._bodyClassRemove();
+      this._targetRemoveClass();
     },
 
     _classNamesObserver: observer('classNames', function() {
-      this._bodyClassRemove();
-      this._bodyClassAdd();
+      this._targetRemoveClass();
+      this._targetAddClass();
     })
   });
 }

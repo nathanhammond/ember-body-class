@@ -48,7 +48,7 @@ module.exports = function(environment) {
   }
 
   ENV['ember-body-class'] = {
-    //includeRouteName: false
+    useRootElement: false
   }
 
   return ENV;
