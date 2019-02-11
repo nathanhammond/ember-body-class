@@ -3,7 +3,7 @@
 
 # ember-body-class2
 
-Easily add CSS classes on the `<body>`, including route names as well as loading and error states.
+Easily add CSS classes on the `<body>` or `rootElement`, including route names as well as loading and error states.
 
 `npm install --save ember-body-class2`
 
@@ -11,6 +11,7 @@ This is a fork of [ember-body-class](https://github.com/stonecircle/ember-body-c
 - It removes API surface in favor of moving to a declarative pattern. This reduces the likelihood of class naming collisions.
 - It does not branch for FastBoot.
 - It also addresses bugs which have remained unadressed in the original.
+- It allows specifying to use `rootElement` instead of `document.body`.
 
 ## Usage
 
@@ -39,6 +40,17 @@ import BodyClassMixin from 'ember-body-class/mixins/body-class';
 export default Route.extend(BodyClassMixin, {
   // Add any other customizations you may have here.
 });
+```
+
+### Use `rootElement` Instead of `document.body`
+
+To use your configured `rootElement` instead of `document.body` add the following to the application configuration.
+
+```js
+// app/config/environment.js
+ENV['ember-body-class'] = {
+  useRootElement: true
+}
 ```
 
 ### Add Class Name to Each Route

@@ -6,6 +6,13 @@ import { getTarget } from 'ember-body-class/utils/body-class';
 module('Acceptance | ember body class', function(hooks) {
   setupApplicationTest(hooks);
 
+  hooks.beforeEach(function() {
+    const config = this.owner.resolveRegistration('config:environment');
+    config['ember-body-class'] = { useRootElement: true };
+
+    this.owner.resolveRegistration = function() { return config; };
+  });
+
   test('visiting /', async function(assert) {
     const target = getTarget(this.owner);
 

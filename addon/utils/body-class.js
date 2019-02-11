@@ -54,3 +54,36 @@ export function removeClass(element, className) {
     element.setAttribute('class', newClassName);
   }
 }
+
+/**
+ * Given an Ember application instance, returns the element that should have
+ * the class name appended to it.
+ *
+ * @method getTarget
+ * @param {ApplicationInstance} owner the ApplicationInstance
+ * @public
+ */
+export function getTarget(owner) {
+  const document = owner.lookup('service:-document');
+  let target = document.body;
+
+  const config = owner.resolveRegistration('config:environment');
+  let useRootElement = false;
+  if (config['ember-body-class'] && config['ember-body-class'].useRootElement) {
+    useRootElement = true;
+  }
+
+  // Maybe use `rootElement` instead of `document.body`.
+  if (useRootElement && !!owner.rootElement) {
+    if (
+      typeof(owner.rootElement) === 'string' ||
+      owner.rootElement instanceof String
+    ) {
+      target = document.querySelector(owner.rootElement);
+    } else {
+      target = owner.rootElement;
+    }
+  }
+
+  return target;
+}
