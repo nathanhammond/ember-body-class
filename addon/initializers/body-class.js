@@ -4,8 +4,12 @@ import { getTarget, addClass, removeClass } from '../utils/body-class';
 import { getOwner } from '@ember/application';
 import { observer } from '@ember/object';
 
-const WeakMapReference = WeakMap || Ember.WeakMap;
-const addedClasses = new WeakMapReference();
+let addedClasses;
+if (typeof WeakMap === 'undefined') {
+  addedClasses = new Ember.WeakMap();
+} else {
+  addedClasses = new WeakMap();
+}
 
 export function initialize() {
   Route.reopen({
